@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pagamento - SweetShop</title>
+    <link href="https://fonts.googleapis.com/css2?family=Lato&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            font-family: "Lato", sans-serif;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #f0f0f0;
+            color: #333;
+            font-size: 16px;
+        }
+
+        h2 {
+            background-color: #db7fff;
+            padding: 15px;
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+            border-radius: 5px;
+        }
+
+        #carrinho {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 2%;
+            display: block;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding-bottom: 30px;
+        }
+
+        .item-carrinho {
+            display: flex;
+            justify-content: space-between;
+            padding: 20px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .item-carrinho:last-child {
+            border-bottom: none;
+        }
+
+        .info-produto {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .info-produto p {
+            font-size: 18px;
+            margin: 5px 0;
+            color: #333;
+        }
+
+        .info-produto .preco {
+            font-weight: bold;
+            color: #e83e8c;
+        }
+
+        .total-pedido {
+            padding: 20px;
+            font-size: 20px;
+            font-weight: bold;
+            text-align: right;
+            color: #e83e8c;
+            background-color: #f8f8f8;
+            border-top: 2px solid #db7fff;
+            margin-top: 20px;
+        }
+
+        #btn-voltar {
+            background-color: #ff7f50;
+            color: white;
+            padding: 12px 30px;
+            font-size: 18px;
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
+            display: block;
+            margin: 30px auto;
+            transition: background-color 0.3s ease;
+        }
+
+        #btn-voltar:hover {
+            background-color: #ff5c33;
+        }
+
+        /* Formulário de informações do cliente */
+        #formulario-cliente {
+            margin-top: 40px;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        #formulario-cliente h3 {
+            font-size: 22px;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .campo-formulario {
+            margin-bottom: 15px;
+        }
+
+        .campo-formulario label {
+            font-size: 16px;
+            color: #333;
+        }
+
+        .campo-formulario input, .campo-formulario select, .campo-formulario textarea {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            margin-top: 5px;
+            box-sizing: border-box;
+        }
+
+        .campo-formulario select {
+            height: 40px;
+        }
+
+        .campo-formulario textarea {
+            height: 100px;
+            resize: vertical;
+        }
+
+        .btn-enviar {
+            background-color: #32cd32;
+            color: white;
+            padding: 12px 30px;
+            font-size: 18px;
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
+            display: block;
+            margin-top: 20px;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-enviar:hover {
+            background-color: #28a745;
+        }
+
+        @media screen and (max-width: 768px) {
+            .item-carrinho {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .total-pedido {
+                font-size: 18px;
+            }
+
+            #btn-voltar {
+                width: 100%;
+                padding: 12px 0;
+                font-size: 16px;
+            }
+
+            .campo-formulario input, .campo-formulario select, .campo-formulario textarea {
+                font-size: 14px;
+            }
+
+            .btn-enviar {
+                width: 100%;
+                padding: 12px 0;
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <h2>Detalhes do Pedido</h2>
+
+    <div id="carrinho"></div>
+
+    <button id="btn-voltar">Voltar para o Cardápio</button>
+
+    <div id="formulario-cliente">
+        <h3>Informações do Cliente</h3>
+        <form id="form-pedido">
+            <div class="campo-formulario">
+                <label for="nome">Nome Completo</label>
+                <input type="text" id="nome" name="nome" placeholder="Digite seu nome" required>
+            </div>
+
+            <div class="campo-formulario">
+                <label for="email">E-mail</label>
+                <input type="email" id="email" name="email" placeholder="Digite seu e-mail" required>
+            </div>
+
+            <div class="campo-formulario">
+                <label for="whatsapp">WhatsApp</label>
+                <input type="tel" id="whatsapp" name="whatsapp" placeholder="Digite seu WhatsApp" required>
+            </div>
+
+            <div class="campo-formulario">
+                <label for="cep">CEP</label>
+                <input type="text" id="cep" name="cep" placeholder="Digite seu CEP" required>
+            </div>
+
+            <div class="campo-formulario">
+                <label for="endereco">Endereço de Entrega</label>
+                <input type="text" id="endereco" name="endereco" placeholder="Digite seu endereço" required>
+            </div>
+
+            <div class="campo-formulario">
+                <label for="metodo-pagamento">Método de Pagamento</label>
+                <select id="metodo-pagamento" name="metodo-pagamento" required>
+                    <option value="pix">PIX</option>
+                    <option value="cartao">Cartão</option>
+                    <option value="dinheiro">Dinheiro</option>
+                </select>
+            </div>
+
+            <div class="campo-formulario">
+                <label for="informacao-adicional">Informação Adicional</label>
+                <textarea id="informacao-adicional" name="informacao-adicional" placeholder="Caso tenha alguma observação..." rows="4"></textarea>
+            </div>
+
+            <button type="submit" class="btn-enviar">Finalizar Compra</button>
+        </form>
+    </div>
+
+    <script>
+        let db;
+
+        // Abre o banco de dados IndexedDB
+        function openDatabase() {
+            const request = indexedDB.open("PedidosDB", 1);
+
+            request.onupgradeneeded = function(event) {
+                db = event.target.result;
+                if (!db.objectStoreNames.contains("pedidos")) {
+                    const store = db.createObjectStore("pedidos", { keyPath: "id", autoIncrement: true });
+                    store.createIndex("nome", "nome", { unique: false });
+                }
+            };
+
+            request.onsuccess = function(event) {
+                db = event.target.result;
+            };
+
+            request.onerror = function(event) {
+                alert("Erro ao abrir o banco de dados!");
+            };
+        }
+
+        // Função para salvar o pedido no IndexedDB
+        function salvarPedido(pedido) {
+            const transaction = db.transaction(["pedidos"], "readwrite");
+            const store = transaction.objectStore("pedidos");
+
+            const request = store.add(pedido);
+
+            request.onsuccess = function() {
+                console.log("Pedido salvo com sucesso!");
+            };
+
+            request.onerror = function() {
+                alert("Erro ao salvar o pedido!");
+            };
+        }
+
+        window.onload = () => {
+            // Abrir o banco de dados IndexedDB
+            openDatabase();
+
+            // Recuperar os dados do carrinho do localStorage
+            const items = JSON.parse(localStorage.getItem('carrinho'));
+            const containerCarrinho = document.getElementById('carrinho');
+            let total = 0;
+
+            items.forEach((item) => {
+                if (item.quantidade > 0) {
+                    const subtotal = item.preco * item.quantidade;
+                    total += subtotal;
+                    containerCarrinho.innerHTML += `
+                        <div class="item-carrinho">
+                            <div class="info-produto">
+                                <p><strong>Produto:</strong> ${item.nome}</p>
+                                <p><strong>Quantidade:</strong> ${item.quantidade}</p>
+                                <p class="preco"><strong>Subtotal:</strong> R$ ${subtotal.toFixed(2)}</p>
+                            </div>
+                        </div>
+                    `;
+                }
+            });
+
+            if (total > 0) {
+                containerCarrinho.innerHTML += `
+                    <div class="total-pedido">
+                        <p>Total do Pedido: R$ ${total.toFixed(2)}</p>
+                    </div>
+                `;
+            }
+
+            // Voltar para o cardápio
+            document.getElementById('btn-voltar').addEventListener('click', () => {
+                window.location.href = 'cardapio.html';
+            });
+
+            // Envio do formulário
+            document.getElementById('form-pedido').addEventListener('submit', (event) => {
+                event.preventDefault(); // Impede o envio normal do formulário
+
+                const pedido = {
+                    nome: document.getElementById('nome').value,
+                    email: document.getElementById('email').value,
+                    whatsapp: document.getElementById('whatsapp').value,
+                    cep: document.getElementById('cep').value,
+                    endereco: document.getElementById('endereco').value,
+                    metodoPagamento: document.getElementById('metodo-pagamento').value,
+                    informacaoAdicional: document.getElementById('informacao-adicional').value,
+                    itens: items,
+                    total: total
+                };
+
+                // Salva o pedido no IndexedDB
+                salvarPedido(pedido);
+
+                // Redireciona para a página de pedido finalizado
+                window.location.href = 'pedido_finalizado.html';
+            });
+        };
+    </script>
+
+</body>
+</html>

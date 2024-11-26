@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SweetShop</title>
+    <link href="https://fonts.googleapis.com/css2?family=Lato&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            font-family: "Lato", sans-serif;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #f8f8f8;
+            color: #333;
+            font-size: 16px;
+        }
+
+        h2 {
+            background-color: #db7fff;
+            padding: 15px;
+            text-align: center;
+            color: white;
+            margin-bottom: 20px;
+            border-radius: 5px;
+        }
+
+        #produtos, #carrinho {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2%;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+        }
+
+        .produtoso {
+            width: 32%;
+            margin-bottom: 20px;
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            padding: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s ease-in-out;
+        }
+
+        .produtoso img {
+            width: 100%;
+            border-radius: 8px;
+        }
+
+        .produtoso p {
+            text-align: center;
+            font-size: 18px;
+            color: #333;
+            padding: 10px 0;
+        }
+
+        .produtoso a {
+            text-decoration: none;
+            color: #fff;
+            background-color: #ff7f50;
+            text-align: center;
+            display: block;
+            padding: 10px;
+            font-size: 16px;
+            border-radius: 5px;
+            margin-top: 10px;
+            transition: background-color 0.3s ease;
+        }
+
+        .produtoso a:hover {
+            background-color: #ff5c33;
+        }
+
+        .produtoso:hover {
+            transform: translateY(-5px);
+        }
+
+        #carrinho {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 0 2%;
+            display: block;
+        }
+
+        .infocheck {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 1px solid #ddd;
+            background-color: #fff;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .infocheck p {
+            margin: 0;
+            font-size: 16px;
+            color: #333;
+        }
+
+        .btn-remover {
+            background-color: #ff6347;
+            color: white;
+            padding: 5px 10px;
+            font-size: 14px;
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-remover:hover {
+            background-color: #ff2e00;
+        }
+
+        #btn-limpar {
+            background-color: #ff7f50;
+            color: white;
+            padding: 10px 20px;
+            font-size: 18px;
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
+            margin-top: 20px;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+            transition: background-color 0.3s ease;
+        }
+
+        #btn-limpar:hover {
+            background-color: #ff5c33;
+        }
+
+        #btn-finalizar {
+            background-color: #32cd32;
+            color: white;
+            padding: 10px 20px;
+            font-size: 18px;
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
+            margin-top: 20px;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+            transition: background-color 0.3s ease;
+        }
+
+        #btn-finalizar:hover {
+            background-color: #28a745;
+        }
+
+        @media screen and (max-width: 768px) {
+            .produtoso {
+                width: 100%;
+                margin-right: 0;
+            }
+            #carrinho {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <h2>Cardápio</h2>
+    <div id="produtos"></div>
+
+    <h2>Carrinho</h2>
+    <div id="carrinho"></div>
+
+    <button id="btn-limpar">Limpar Carrinho</button>
+    <button id="btn-finalizar">Finalizar Compra</button>
+
+    <script>
+        const items = [
+            { id: 0, nome: 'Chocolate', img: 'chocolate.jpg', quantidade: 0, preco: 5.00 },
+            { id: 1, nome: 'Uva', img: 'uva.jpg', quantidade: 0, preco: 4.00 },
+            { id: 2, nome: 'Limão', img: 'limao.jpg', quantidade: 0, preco: 4.50 },
+            { id: 3, nome: 'Morango', img: 'morango.jpg', quantidade: 0, preco: 4.00 }
+        ];
+
+        function inicializarLoja() {
+            const conteinerProdutos = document.getElementById('produtos');
+            items.forEach((val) => {
+                conteinerProdutos.innerHTML += `
+                    <div class="produtoso">
+                        <img src="${val.img}" alt="${val.nome}" />
+                        <p>${val.nome} - R$ ${val.preco.toFixed(2)}</p>
+                        <a href="#" data-id="${val.id}">Inserir no Carrinho</a>
+                    </div>
+                `;
+            });
+        }
+
+        function verificarCarrinho() {
+            const conteinerCarrinho = document.getElementById('carrinho');
+            conteinerCarrinho.innerHTML = "";
+            let total = 0;
+
+            items.forEach((val) => {
+                if (val.quantidade > 0) {
+                    const subtotal = val.preco * val.quantidade;
+                    total += subtotal;
+                    conteinerCarrinho.innerHTML += `
+                        <div class="infocheck">
+                            <p>Produto: ${val.nome}</p>
+                            <p>Quantidade: ${val.quantidade}</p>
+                            <p>Subtotal: R$ ${subtotal.toFixed(2)}</p>
+                            <button class="btn-remover" data-id="${val.id}">Remover</button>
+                        </div>
+                    `;
+                }
+            });
+
+            if (total > 0) {
+                conteinerCarrinho.innerHTML += `
+                    <div class="infocheck" style="font-weight: bold;">
+                        <p>Total do Pedido: R$ ${total.toFixed(2)}</p>
+                    </div>
+                `;
+            }
+
+            configurarEventosRemover();
+        }
+
+        function adicionarAoCarrinho(event) {
+            event.preventDefault();
+            const key = this.getAttribute('data-id');
+            items[key].quantidade++;
+            verificarCarrinho();
+            this.innerHTML = 'Adicionado!';
+            this.style.backgroundColor = '#4CAF50'; 
+            setTimeout(() => {
+                this.innerHTML = 'Inserir no Carrinho';
+                this.style.backgroundColor = '#ff7f50';
+            }, 2000);
+        }
+
+        function removerDoCarrinho(event) {
+            const key = this.getAttribute('data-id');
+            items[key].quantidade = 0;
+            verificarCarrinho();
+        }
+
+        function limparCarrinho() {
+            items.forEach(item => item.quantidade = 0);
+            verificarCarrinho();
+        }
+
+        function finalizarCompra() {
+            // Salvar o carrinho no localStorage
+            localStorage.setItem('carrinho', JSON.stringify(items));
+            window.location.href = 'pagamento.html'; 
+        }
+
+        function configurarEventos() {
+            const links = document.querySelectorAll('.produtoso a');
+            links.forEach(link => {
+                link.addEventListener('click', adicionarAoCarrinho);
+            });
+        }
+
+        function configurarEventosRemover() {
+            const botaoRemover = document.querySelectorAll('.btn-remover');
+            botaoRemover.forEach(botao => {
+                botao.addEventListener('click', removerDoCarrinho);
+            });
+        }
+
+        document.getElementById('btn-limpar').addEventListener('click', limparCarrinho);
+        document.getElementById('btn-finalizar').addEventListener('click', finalizarCompra);
+
+        inicializarLoja();
+        configurarEventos();
+    </script>
+
+</body>
+</html>

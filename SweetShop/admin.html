@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pedidos - SweetShop - Administração</title>
+    <link href="https://fonts.googleapis.com/css2?family=Lato&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            font-family: "Lato", sans-serif;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #f4f4f4;
+            color: #333;
+            font-size: 16px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        h2 {
+            background-color: #db7fff;
+            padding: 15px;
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+            border-radius: 5px;
+            width: 100%;
+            max-width: 800px;
+        }
+
+        #pedidos-container {
+            max-width: 1000px;
+            width: 100%;
+            margin: 0 auto;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+        }
+
+        .pedido-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 15px;
+            border-bottom: 1px solid #f0f0f0;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            background-color: #fafafa;
+            transition: background-color 0.3s ease;
+        }
+
+        .pedido-item:last-child {
+            border-bottom: none;
+        }
+
+        .pedido-item:hover {
+            background-color: #f0f0f0;
+        }
+
+        .info-pedido {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .info-pedido p {
+            font-size: 16px;
+            margin: 5px 0;
+            color: #333;
+        }
+
+        .preco-total {
+            font-weight: bold;
+            color: #e83e8c;
+            font-size: 18px;
+        }
+
+        .btn-concluir {
+            background-color: #32cd32;
+            color: white;
+            padding: 8px 16px; 
+            font-size: 14px; 
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s;
+            margin-top: 10px; 
+        }
+
+        .btn-concluir:hover {
+            background-color: #28a745;
+            transform: scale(1.05);
+        }
+
+        .btn-concluir:active {
+            background-color: #218838;
+        }
+
+        #btn-voltar {
+            background-color: #ff7f50;
+            color: white;
+            padding: 12px 30px;
+            font-size: 18px;
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
+            display: block;
+            margin: 30px auto;
+            transition: background-color 0.3s ease;
+        }
+
+        #btn-voltar:hover {
+            background-color: #ff5c33;
+        }
+
+        
+        @media (max-width: 768px) {
+            .pedido-item {
+                flex-direction: column;
+                align-items: flex-start;
+                padding: 10px;
+            }
+
+            .btn-concluir {
+                width: 100%;
+                padding: 10px 0; 
+                font-size: 16px;
+                margin-top: 15px;
+            }
+
+            #btn-voltar {
+                width: 100%;
+                padding: 12px 0;
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <h2>Pedidos Realizados</h2>
+
+    <div id="pedidos-container">
+        
+    </div>
+
+    <button id="btn-voltar">Voltar para o Login</button>
+
+    <script>
+        let db;
+
+        
+        function openDatabase() {
+            const request = indexedDB.open("PedidosDB", 1);
+
+            request.onupgradeneeded = function(event) {
+                db = event.target.result;
+                if (!db.objectStoreNames.contains("pedidos")) {
+                    const store = db.createObjectStore("pedidos", { keyPath: "id", autoIncrement: true });
+                    store.createIndex("nome", "nome", { unique: false });
+                }
+            };
+
+            request.onsuccess = function(event) {
+                db = event.target.result;
+                loadPedidos();
+            };
+
+            request.onerror = function(event) {
+                alert("Erro ao abrir o banco de dados!");
+            };
+        }
+
+        
+        function loadPedidos() {
+            const transaction = db.transaction(["pedidos"], "readonly");
+            const store = transaction.objectStore("pedidos");
+
+            const request = store.getAll();
+
+            request.onsuccess = function() {
+                const pedidos = request.result;
+                displayPedidos(pedidos);
+            };
+
+            request.onerror = function() {
+                alert("Erro ao recuperar os pedidos!");
+            };
+        }
+
+        
+        function displayPedidos(pedidos) {
+            const container = document.getElementById('pedidos-container');
+            if (pedidos.length === 0) {
+                container.innerHTML = '<p><strong>Não há pedidos realizados ainda.</strong></p>';
+                return;
+            }
+
+            pedidos.forEach((pedido, index) => {
+                const pedidoDiv = document.createElement('div');
+                pedidoDiv.classList.add('pedido-item');
+                pedidoDiv.innerHTML = `
+                    <div class="info-pedido">
+                        <p><strong>Pedido #${pedido.id}</strong></p>
+                        <p><strong>Nome:</strong> ${pedido.nome}</p>
+                        <p><strong>E-mail:</strong> ${pedido.email}</p>
+                        <p><strong>WhatsApp:</strong> ${pedido.whatsapp}</p>
+                        <p><strong>Endereço:</strong> ${pedido.endereco}</p>
+                        <p><strong>CEP:</strong> ${pedido.cep}</p>
+                        <p><strong>Método de Pagamento:</strong> ${pedido.metodoPagamento}</p>
+                        <p><strong>Informação Adicional:</strong> ${pedido.informacaoAdicional || 'Nenhuma'}</p>
+                    </div>
+                    <div class="preco-total">
+                        <p><strong>Total:</strong> R$ ${pedido.total.toFixed(2)}</p>
+                    </div>
+                    <button class="btn-concluir" onclick="concluirPedido(${pedido.id})">Concluir Pedido</button>
+                `;
+                container.appendChild(pedidoDiv);
+            });
+        }
+
+        
+        function concluirPedido(pedidoId) {
+            const confirmacao = confirm("Tem certeza que deseja concluir este pedido?");
+            if (confirmacao) {
+                const transaction = db.transaction(["pedidos"], "readwrite");
+                const store = transaction.objectStore("pedidos");
+                const request = store.delete(pedidoId);
+
+                request.onsuccess = function() {
+                    alert("Pedido concluído com sucesso!");
+                    loadPedidos(); 
+                };
+
+                request.onerror = function() {
+                    alert("Erro ao concluir o pedido.");
+                };
+            }
+        }
+
+        
+        document.getElementById('btn-voltar').addEventListener('click', () => {
+            window.location.href = 'login.html'; 
+        });
+
+        
+        window.onload = () => {
+            openDatabase();
+        };
+    </script>
+
+</body>
+</html>

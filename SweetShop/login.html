@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - SweetShop Admin</title>
+    <link href="https://fonts.googleapis.com/css2?family=Lato&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            font-family: "Lato", sans-serif;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #f4f4f4;
+            color: #333;
+            font-size: 16px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        h2 {
+            background-color: #db7fff;
+            padding: 15px;
+            text-align: center;
+            color: white;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            width: 100%;
+            max-width: 400px;
+        }
+
+        #login-form {
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+        }
+
+        .campo-formulario {
+            margin-bottom: 15px;
+        }
+
+        .campo-formulario label {
+            font-size: 16px;
+            color: #333;
+        }
+
+        .campo-formulario input {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            margin-top: 5px;
+            box-sizing: border-box;
+        }
+
+        .campo-formulario input[type="password"] {
+            font-size: 14px;
+        }
+
+        .btn-login, .btn-cadastrar {
+            background-color: #32cd32;
+            color: white;
+            padding: 12px 30px;
+            font-size: 18px;
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 15px;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-login:hover, .btn-cadastrar:hover {
+            background-color: #28a745;
+        }
+
+        .btn-cadastrar {
+            background-color: #ff7f50;
+        }
+
+        .btn-cadastrar:hover {
+            background-color: #ff5c33;
+        }
+
+        .info {
+            font-size: 14px;
+            margin-top: 20px;
+        }
+
+        /* Layout Responsivo */
+        @media (max-width: 768px) {
+            .campo-formulario input {
+                font-size: 14px;
+            }
+
+            .btn-login, .btn-cadastrar {
+                padding: 10px 20px;
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <h2>Área Administrativa - Login</h2>
+
+    <div id="login-form">
+        <form id="form-login">
+            <div class="campo-formulario">
+                <label for="usuario">Usuário</label>
+                <input type="text" id="usuario" name="usuario" placeholder="Digite seu nome de usuário" required>
+            </div>
+
+            <div class="campo-formulario">
+                <label for="senha">Senha</label>
+                <input type="password" id="senha" name="senha" placeholder="Digite sua senha" required>
+            </div>
+
+            <button type="submit" class="btn-login">Entrar como Administrador</button>
+        </form>
+
+        <button id="btn-cadastrar" class="btn-cadastrar">Cadastrar Novo Usuário</button>
+
+        <div class="info">
+            <p><strong>Nota:</strong> Caso você ainda não tenha um usuário, clique no botão acima para cadastrar um novo.</p>
+        </div>
+    </div>
+
+    <script>
+        // Função para criar um novo usuário no LocalStorage
+        function cadastrarUsuario(usuario, senha) {
+            // Armazenando o novo usuário no localStorage
+            localStorage.setItem("usuario", usuario);
+            localStorage.setItem("senha", senha);
+            alert("Usuário cadastrado com sucesso! Agora você pode fazer login.");
+        }
+
+        // Função de login
+        function login(usuario, senha) {
+            // Verifica se o usuário e senha estão corretos
+            const usuarioSalvo = localStorage.getItem("usuario");
+            const senhaSalva = localStorage.getItem("senha");
+
+            if (usuario === usuarioSalvo && senha === senhaSalva) {
+                window.location.href = "admin.html"; // Redireciona para a página do Admin
+            } else {
+                alert("Usuário ou senha incorretos.");
+            }
+        }
+
+        // Manipulação do formulário de login
+        document.getElementById("form-login").addEventListener("submit", function(event) {
+            event.preventDefault();
+            const usuario = document.getElementById("usuario").value;
+            const senha = document.getElementById("senha").value;
+
+            login(usuario, senha);
+        });
+
+        // Manipulação do botão de cadastrar
+        document.getElementById("btn-cadastrar").addEventListener("click", function() {
+            const usuario = prompt("Digite o nome do novo usuário:");
+            const senha = prompt("Digite a senha para o novo usuário:");
+
+            if (usuario && senha) {
+                cadastrarUsuario(usuario, senha);
+            } else {
+                alert("Por favor, forneça um nome de usuário e senha.");
+            }
+        });
+    </script>
+
+</body>
+</html>
